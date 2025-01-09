@@ -6,7 +6,7 @@
 import scrapy
 
 
-class TutorialItem(scrapy.Item):
+class SummaryItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    summary = scrapy.Field()

@@ -2,18 +2,17 @@ from pathlib import Path
 
 import scrapy
 import re
+from ..items import SummaryItem
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
 
-    def start_requests(self):
-        urls = [
-            "https://www.ncbi.nlm.nih.gov/gene/?term=ctcf"
-        ]
-        for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
+    start_urls = [
+        "https://www.ncbi.nlm.nih.gov/gene/10664"
+    ]
 
     def parse(self, response):
-        element = response.selector.xpath('/html/body/div[1]/div[1]/form/div[1]/div[4]/div/div[3]/section/div/div/div/div/div/div[1]/div[2]/ul/li').getall()[0]
-        gene_id = re.search(r'<li>Gene ID: (\d+)</li>', element).group(1)
-        yield gene_id
+        summaryDl = response.xpath('//*[@id="summaryDl"]')
+        summary = summaryDl.xpath('//dt[text()="Summary"]/following-sibling::node()[2]')[0]
+        item = SummaryItem(summary = summary.xpath('string(.)').extract()[0])
+        yield item

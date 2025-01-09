@@ -9,6 +9,12 @@ from itemadapter import ItemAdapter
 
 
 class TutorialPipeline:
+    def open_spider(self, spider):
+        self.fd = open('summary.txt', 'w')
+
     def process_item(self, item, spider):
-        breakpoint()
+        self.fd.write(item['summary'] + '\n')
         return item
+
+    def close_spider(self, spider):
+        self.fd.close()
